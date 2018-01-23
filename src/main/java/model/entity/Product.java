@@ -19,13 +19,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-import lombok.Data;
-
-@Data
 @Entity
 @Table(name = "product", uniqueConstraints = { @UniqueConstraint(columnNames = "productName") })
 @JsonInclude(value = Include.NON_NULL)
-public class Product {
+public class Product extends BaseEntity {
+
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name = "id")

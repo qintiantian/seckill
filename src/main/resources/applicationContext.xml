@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"  
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:context="http://www.springframework.org/schema/context"  
+    xmlns:tx="http://www.springframework.org/schema/tx"
     xmlns:mvc="http://www.springframework.org/schema/mvc"  
+    xmlns:aop="http://www.springframework.org/schema/aop"
     xsi:schemaLocation="http://www.springframework.org/schema/beans     
     http://www.springframework.org/schema/beans/spring-beans.xsd    
     http://www.springframework.org/schema/context    
     http://www.springframework.org/schema/context/spring-context-3.2.xsd    
     http://www.springframework.org/schema/mvc    
-    http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd"  
+    http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+    http://www.springframework.org/schema/aop  
+    http://www.springframework.org/schema/aop/spring-aop.xsd
+    http://www.springframework.org/schema/tx  
+    http://www.springframework.org/schema/tx/spring-tx.xsd"  
     default-autowire="byName"> 
     
     <!-- 只解析除controller之外的注解(即解析service、dao), 避免重复加载导致事务失效 -->  
@@ -17,8 +24,11 @@
     
     <context:property-placeholder location="classpath:conf/*.properties" />
     
+    <!-- 引入redis配置文件 -->
+	<import resource="redis-context.xml" />
+    
     <!-- 定义数据库连接池数据源bean destroy-method="close"的作用是当数据库连接不使用的时候,就把该连接重新放到数据池中,方便下次使用调用  -->
-    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"destroy-method="close">
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
         <!-- 设置JDBC驱动名称 -->
         <property name="driverClass" value="${datasource.driver-class-name}" />
         <!-- 设置JDBC连接URL -->
@@ -68,8 +78,7 @@
     </bean>
     
      <!-- 定义事务管理 -->
-    <bean id="transactionManager"
-        class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+    <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory" />
     </bean>
     
@@ -93,7 +102,7 @@
             <tx:method name="*" read-only="true" />  
         </tx:attributes>
     </tx:advice>
-
+    
     <!-- 定义切面，在 * com.qintiantian.seckill.service.*.*(..) 中执行有关的hibernate session的事务操作 -->
     <aop:config>
         <aop:pointcut id="txPointcut" expression="execution(* com.qintiantian.seckill.service.*.*(..))" />

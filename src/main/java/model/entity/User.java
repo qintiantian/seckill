@@ -19,13 +19,15 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-import lombok.Data;
+import lombok.Getter;
 
-@Data
 @Entity
 @Table(name = "user", uniqueConstraints = { @UniqueConstraint(columnNames = "phone") })
 @JsonInclude(value = Include.NON_NULL)
-public class User {
+@Getter
+public class User extends BaseEntity {
+
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name = "id")

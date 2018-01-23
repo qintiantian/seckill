@@ -22,13 +22,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.qintiantian.seckill.model.enums.OrderStatus;
 
-import lombok.Data;
-
-@Data
 @Entity
 @Table(name = "orders", uniqueConstraints = { @UniqueConstraint(columnNames = "phone") })
 @JsonInclude(value = Include.NON_NULL)
-public class Order {
+public class Order extends BaseEntity {
+
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name = "id")
